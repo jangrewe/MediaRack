@@ -37,29 +37,26 @@ if ($_GET['get'] == 'poster' && !empty($_GET['show'])) {
 	if(!file_exists($poster)) {
 	
 		if($_GET['season'])
-			$source = $showsPath.'/'.addslashes($_GET['show']).'/season'.$_GET['season'].'-poster.jpg';
+			$source = $showsPath.'/'.$_GET['show'].'/season'.$_GET['season'].'-poster.jpg';
 		else
-			$source = $showsPath.'/'.addslashes($_GET['show']).'/poster.jpg';
+			$source = $showsPath.'/'.$_GET['show'].'/poster.jpg';
 			
-		if(!file_exists($source)) {
-			$source = 'img/no_poster.jpg';
+		if(file_exists($source)) {
+			$img = new Imagick();
+			$img->setOption('jpeg:size', '800x532');
+			$img->readImage($source);
+			$img->thumbnailImage(150, 0);
+			$img->setImageCompression(Imagick::COMPRESSION_JPEG);
+			$img->setImageCompressionQuality(80); 
+			$img->writeImage($poster);
+		}else{
+			$poster = 'img/no_poster.jpg';
 		}
-		$img = new Imagick();
-		$img->setOption('jpeg:size', '800x532');
-		$img->readImage($source);
-		$img->thumbnailImage(150, 0);
-		$img->setImageCompression(Imagick::COMPRESSION_JPEG);
-		$img->setImageCompressionQuality(80); 
-		$img->writeImage($poster);
 	}
 	
 	header('Content-type: image/jpeg');
 	header('Content-length: '.filesize($poster));
-	$file = @fopen($poster, 'rb');
-	if ($file) {
-		fpassthru($file);
-		exit;
-	}
+	readfile($poster);
 	die;
 }
 
@@ -68,31 +65,28 @@ if ($_GET['get'] == 'fanart' && !empty($_GET['show'])) {
 	$fanart = 'fanart/'.cleanName($_GET['show']).'.jpg';
 	
 	if(!file_exists($fanart)) {
-		$source = $showsPath.'/'.addslashes($_GET['show']).'/fanart.jpg';
-		if(!file_exists($source)) {
-			$source = 'img/no_fanart.jpg';
+		$source = $showsPath.'/'.$_GET['show'].'/fanart.jpg';
+		if(file_exists($source)) {
+			$img = new Imagick();
+			$img->setOption('jpeg:size', '1280x720');
+			$img->readImage($source);
+			$img->thumbnailImage(1280, 720);
+			$overlay = new Imagick();
+			$overlay->newImage(1280, 720, new ImagickPixel('black'));
+			$overlay->setOption('jpeg:size', '1280x720');
+			$overlay->setImageOpacity(0.80);
+			$img->compositeImage($overlay, imagick::COMPOSITE_OVER, 0, 0);
+			$img->setImageCompression(Imagick::COMPRESSION_JPEG);
+			$img->setImageCompressionQuality(75); 
+			$img->writeImage($fanart);
+		}else{
+			$fanart = 'img/no_fanart.jpg';
 		}
-		$img = new Imagick();
-		$img->setOption('jpeg:size', '1280x720');
-		$img->readImage($source);
-		$img->thumbnailImage(1280, 720);
-		$overlay = new Imagick();
-		$overlay->newImage(1280, 720, new ImagickPixel('black'));
-		$overlay->setOption('jpeg:size', '1280x720');
-		$overlay->setImageOpacity(0.80);
-		$img->compositeImage($overlay, imagick::COMPOSITE_OVER, 0, 0);
-		$img->setImageCompression(Imagick::COMPRESSION_JPEG);
-		$img->setImageCompressionQuality(75); 
-		$img->writeImage($fanart);
 	}
 	
 	header('Content-type: image/jpeg');
 	header('Content-length: '.filesize($fanart));
-	$file = @fopen($fanart, 'rb');
-	if ($file) {
-		fpassthru($file);
-		exit;
-	}
+	readfile($fanart);
 	die;
 }
 
@@ -101,25 +95,21 @@ if ($_GET['get'] == 'logo' && !empty($_GET['show'])) {
 	$logo = 'logo/'.cleanName($_GET['show']).'.png';
 	
 	if(!file_exists($logo)) {
-		$source = $showsPath.'/'.addslashes($_GET['show']).'/logo.png';
-		if(!file_exists($source)) {
-			header("HTTP/1.0 404 Not Found");
-			die;
-		}else{
+		$source = $showsPath.'/'.$_GET['show'].'/clearlogo.png';
+		if(file_exists($source)) {
 			$img = new Imagick();
 			$img->readImage($source);
 			$img->thumbnailImage(0, 50);
 			$img->writeImage($logo);
+		}else{
+			header("HTTP/1.0 404 Not Found");
+			die;
 		}
 	}
 	
-	header('Content-type: image/jpeg');
+	header('Content-type: image/png');
 	header('Content-length: '.filesize($logo));
-	$file = @fopen($logo, 'rb');
-	if ($file) {
-		fpassthru($file);
-		exit;
-	}
+	readfile($logo);
 	die;
 }
 

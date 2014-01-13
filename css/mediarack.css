@@ -1,3 +1,9 @@
+html { 
+	overflow: -moz-scrollbars-vertical; 
+	overflow: scroll; 
+	/* overflow-y: scroll; *doesn’t work with firefox*/ 
+}
+
 body {
 	padding-top: 70px;
 }
@@ -30,8 +36,12 @@ body {
 	height: 220px;
 }
 
-.episodes {
-	margin-top: 5px;
+table.episodes {
+	margin-top: 10px;
+}
+
+table.episodes  tr td{
+	font-weight: bold;
 }
 
 .panel-title {
@@ -41,4 +51,8 @@ body {
 div.panel-body.lazy {
 	background: repeat-y top center;
 	background-size: 100% auto;
+}
+
+div#shows {
+	display: none;
 }

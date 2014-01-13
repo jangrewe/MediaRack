@@ -45,7 +45,7 @@ if ($_GET['get'] == 'poster' && !empty($_GET['show'])) {
 			$img = new Imagick();
 			$img->setOption('jpeg:size', '800x532');
 			$img->readImage($source);
-			$img->thumbnailImage(150, 0);
+			$img->thumbnailImage(0, 220);
 			$img->setImageCompression(Imagick::COMPRESSION_JPEG);
 			$img->setImageCompressionQuality(80); 
 			$img->writeImage($poster);
@@ -68,12 +68,12 @@ if ($_GET['get'] == 'fanart' && !empty($_GET['show'])) {
 		$source = $showsPath.'/'.$_GET['show'].'/fanart.jpg';
 		if(file_exists($source)) {
 			$img = new Imagick();
-			$img->setOption('jpeg:size', '1280x720');
+			$img->setOption('jpeg:size', '1024x576');
 			$img->readImage($source);
-			$img->thumbnailImage(1280, 720);
+			$img->thumbnailImage(1024, 0);
 			$overlay = new Imagick();
-			$overlay->newImage(1280, 720, new ImagickPixel('black'));
-			$overlay->setOption('jpeg:size', '1280x720');
+			$overlay->newImage(1024, 576, new ImagickPixel('black'));
+			$overlay->setOption('jpeg:size', '1024x576');
 			$overlay->setImageOpacity(0.80);
 			$img->compositeImage($overlay, imagick::COMPOSITE_OVER, 0, 0);
 			$img->setImageCompression(Imagick::COMPRESSION_JPEG);

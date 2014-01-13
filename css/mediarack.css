@@ -6,8 +6,9 @@ body {
 	margin-bottom: 50px;
 }
 
-.showName {
-
+.showName.panel-heading {
+	min-height: 71px;
+	height: 71px;
 }
 
 .showLogo {	
@@ -20,8 +21,13 @@ body {
 
 }
 
-.showPoster {
-	
+.thumbnail {
+	min-height: 230px;
+	height: 230px;
+}
+.thumbnail  img.showPoster {
+	min-height: 220px;
+	height: 220px;
 }
 
 .episodes {
@@ -30,4 +36,9 @@ body {
 
 .panel-title {
 	font-weight: bold;
+}
+
+div.panel-body.lazy {
+	background: repeat-y top center;
+	background-size: 100% auto;
 }

@@ -12,10 +12,10 @@ function getShows() {
 			divShows.empty();
 			$.each(data, function (key, show) {
 				var divShowContainer = $('<div class="show panel panel-default" data-showid="'+show.id+'" id="show_'+show.id+'"></div>');
-				var divShowHeader = $('<div class="showName panel-heading"><h2 class="panel-title text-center"><img class="showLogo" alt="'+show.name+'" src="api.php?get=logo&show='+escape(show.folder)+'" /></h2></div>');
-				var divShowBody = $('<div class="panel-body" ></div>');
+				var divShowHeader = $('<div class="showName panel-heading"><h2 class="panel-title text-center"><img class="showLogo lazy" style="min-height: 50px; height: 50px;" alt="'+show.name+'" data-original="api.php?get=logo&show='+escape(show.folder)+'" src="" /></h2></div>');
+				var divShowBody = $('<div class="panel-body lazy" data-original="api.php?get=fanart&show='+escape(show.folder)+'"></div>');
 				var divShowFooter =$('<div class="panel-footer">Seasons: , Episodes: </div>');
-				var divShowPoster = $('<div class="showPoster col-md-2 text-center"><a href="#" class="thumbnail"><img id="poster_'+show.id+'" src="api.php?get=poster&show='+escape(show.folder)+'" /></a></div>');
+				var divShowPoster = $('<div class="col-md-2 text-center"><a href="#" class="thumbnail"><img id="poster_'+show.id+'" class="showPoster lazy" data-original="api.php?get=poster&show='+escape(show.folder)+'" src="img/no_poster.jpg" /></a></div>');
 				var ulSeasons = $('<ul class="seasons col-md-10 list-group"></ul>');
 				$.each(show.seasons, function(key, season) {
 					var liSeason = $('<li class="season list-group-item" data-season="'+season.season+'"><strong>Season '+season.season+'</strong><span class="badge">'+season.count+'</span></li>');
@@ -32,8 +32,23 @@ function getShows() {
 				divShowContainer.append(divShowHeader);
 				divShowBody.append(divShowPoster);
 				divShowBody.append(ulSeasons);
-				divShowBody.css('background', 'url(api.php?get=fanart&show='+escape(show.folder)+') repeat-y top center');
+				//divShowBody.css('background', 'url(api.php?get=fanart&show='+escape(show.folder)+') repeat-y top center');
 				//divShowHeader.append('<img class="showLogo" alt="'+show.name+'" src="api.php?get=logo&show='+escape(show.folder)+'" />');
+				$("img.showLogo.lazy").lazyload({
+					event: "scrollstop",
+					effect: "fadeIn",
+					threshold: 800
+				});
+				divShowBody.lazyload({
+					event: "scrollstop",
+					effect: "fadeIn",
+					threshold: 1600
+				});
+				$("img.showPoster.lazy").lazyload({
+					event: "scrollstop",
+					effect: "fadeIn",
+					threshold: 800
+				});
 				divShowContainer.append(divShowBody);
 				divShowContainer.append(divShowFooter);
 				divShows.append(divShowContainer);

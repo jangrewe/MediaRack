@@ -1,0 +1,33 @@
+body {
+	padding-top: 70px;
+}
+
+.show {
+	margin-bottom: 50px;
+}
+
+.showName {
+
+}
+
+.showLogo {	
+	display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.season {
+
+}
+
+.showPoster {
+	
+}
+
+.episodes {
+	margin-top: 5px;
+}
+
+.panel-title {
+	font-weight: bold;
+}

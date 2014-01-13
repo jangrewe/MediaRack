@@ -1,0 +1,6 @@
+<?php
+
+$sbPath = '/opt/sickbeard';
+$showsPath = '/mnt/storage/media/tv';
+
+?>

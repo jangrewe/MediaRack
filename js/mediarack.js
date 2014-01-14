@@ -45,22 +45,22 @@ function getShows() {
 				$("img.showLogo.lazy").lazyload({
 					event: "scrollstop",
 					effect: "fadeIn",
-					threshold: 800
+					threshold: 1500
 				});
 				divShowBody.lazyload({
 					event: "scrollstop",
 					effect: "fadeIn",
-					threshold: 1600
+					threshold: 1800
 				});
 				$("img.showPoster.lazy").lazyload({
 					event: "scrollstop",
 					effect: "fadeIn",
-					threshold: 800
+					threshold: 1600
 				});
 				divShowContainer.append(divShowBody);
 				divShowContainer.append(divShowFooter);
 				divShows.append(divShowContainer);
-				if(i < 3) {
+				if(i < 5) {
 					divShowHeader.find("img.showLogo").attr('src', 'api.php?get=logo&show='+escape(show.folder));
 					divShowBody.css('background-image', 'url(api.php?get=fanart&show='+escape(show.folder)+')');
 					divShowPoster.find("img.showPoster").attr('src', 'api.php?get=poster&show='+escape(show.folder));

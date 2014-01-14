@@ -49,7 +49,7 @@ table.episodes  tr td{
 }
 
 div.panel-body.lazy {
-	background: repeat-y top center;
+	background: url('../img/no_fanart.jpg') repeat-y top center;
 	background-size: 100% auto;
 }
 

@@ -30,16 +30,16 @@ if ($_GET['get'] == 'shows') {
 if ($_GET['get'] == 'poster' && !empty($_GET['show'])) {
 
 	if($_GET['season'])
-		$poster = 'poster/'.cleanName($_GET['show']).'-S'.$_GET['season'].'.jpg';
+		$poster = get_absolute_path('poster/'.cleanName($_GET['show']).'-S'.$_GET['season'].'.jpg');
 	else
-		$poster = 'poster/'.cleanName($_GET['show']).'.jpg';
+		$poster = get_absolute_path('poster/'.cleanName($_GET['show']).'.jpg');
 	
 	if(!file_exists($poster)) {
 	
 		if($_GET['season'])
-			$source = $showsPath.'/'.$_GET['show'].'/season'.$_GET['season'].'-poster.jpg';
+			$source = '/'.get_absolute_path($showsPath.'/'.$_GET['show'].'/season'.$_GET['season'].'-poster.jpg');
 		else
-			$source = $showsPath.'/'.$_GET['show'].'/poster.jpg';
+			$source = '/'.get_absolute_path($showsPath.'/'.$_GET['show'].'/poster.jpg');
 			
 		if(file_exists($source)) {
 			$img = new Imagick();
@@ -49,6 +49,9 @@ if ($_GET['get'] == 'poster' && !empty($_GET['show'])) {
 			$img->setImageCompression(Imagick::COMPRESSION_JPEG);
 			$img->setImageCompressionQuality(80); 
 			$img->writeImage($poster);
+		}elseif($_GET['season'] != '') {
+			header("HTTP/1.0 404 Not Found");
+			die;
 		}else{
 			$poster = 'img/no_poster.jpg';
 		}
@@ -62,10 +65,10 @@ if ($_GET['get'] == 'poster' && !empty($_GET['show'])) {
 
 if ($_GET['get'] == 'fanart' && !empty($_GET['show'])) {
 
-	$fanart = 'fanart/'.cleanName($_GET['show']).'.jpg';
+	$fanart = get_absolute_path('fanart/'.cleanName($_GET['show']).'.jpg');
 	
 	if(!file_exists($fanart)) {
-		$source = $showsPath.'/'.$_GET['show'].'/fanart.jpg';
+		$source = '/'.get_absolute_path($showsPath.'/'.$_GET['show'].'/fanart.jpg');
 		if(file_exists($source)) {
 			$img = new Imagick();
 			$img->setOption('jpeg:size', '1024x576');
@@ -92,10 +95,10 @@ if ($_GET['get'] == 'fanart' && !empty($_GET['show'])) {
 
 if ($_GET['get'] == 'logo' && !empty($_GET['show'])) {
 
-	$logo = 'logo/'.cleanName($_GET['show']).'.png';
+	$logo = get_absolute_path('logo/'.cleanName($_GET['show']).'.png');
 	
 	if(!file_exists($logo)) {
-		$source = $showsPath.'/'.$_GET['show'].'/clearlogo.png';
+		$source = '/'.get_absolute_path($showsPath.'/'.$_GET['show'].'/clearlogo.png');
 		if(file_exists($source)) {
 			$img = new Imagick();
 			$img->readImage($source);
@@ -128,6 +131,21 @@ if ($_GET['get'] == 'episodes' && !empty($_GET['show']) && isset($_GET['season']
 
 function cleanName($show) {
 	return preg_replace("/[^a-zA-Z0-9]/", "_", $show);
+}
+
+function get_absolute_path($path) {
+	$path = str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $path);
+	$parts = array_filter(explode(DIRECTORY_SEPARATOR, $path), 'strlen');
+	$absolutes = array();
+	foreach ($parts as $part) {
+		if ('.' == $part) continue;
+		if ('..' == $part) {
+			array_pop($absolutes);
+		} else {
+			$absolutes[] = $part;
+		}
+	}
+	return implode(DIRECTORY_SEPARATOR, $absolutes);
 }
 
 ?>

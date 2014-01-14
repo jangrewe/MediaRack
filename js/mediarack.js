@@ -32,6 +32,7 @@ function getShows() {
 						getEpisodes($(this).parent().parent().parent().data('showid'), $(this).data('season'));
 					});
 					liSeason.hover(function() {
+						$("#poster_"+show.id).error(function() {$(this).attr('src', 'api.php?get=poster&show='+escape(show.folder))});
 						$("#poster_"+show.id).attr('src', 'api.php?get=poster&show='+escape(show.folder)+'&season='+season.season);
 					}, function() {
 						$("#poster_"+show.id).attr('src', 'api.php?get=poster&show='+escape(show.folder));

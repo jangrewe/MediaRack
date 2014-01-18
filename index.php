@@ -49,6 +49,18 @@
     </div>
 
     <div class="container">
+	
+		<div class="content jumbotron" id="home">
+			<div class="jcarousel-wrapper">
+				<div class="jcarousel">
+					<ul id="latestShows"></ul>
+				</div>
+				<a href="#" class="jcarousel-control-prev">&lsaquo;</a>
+				<a href="#" class="jcarousel-control-next">&rsaquo;</a>
+			</div>
+		</div>
+	
+	
 		<div class="content" id="shows"></div>
     </div> <!-- /container -->
 
@@ -58,6 +70,7 @@
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="js/jquery-1.10.2.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
+	<script src="js/jquery.jcarousel.min.js"></script>
 	<script src="js/jquery.lazyload.min.js"></script>
 	<script src="js/jquery.scrollstop.js"></script>
 	<script src="js/mediarack.js"></script>

@@ -129,6 +129,19 @@ if ($_GET['get'] == 'episodes' && !empty($_GET['show']) && isset($_GET['season']
 	die;
 }
 
+if ($_GET['get'] == 'latest') {
+	$sbdb = new SQLite3($sbPath.'/sickbeard.db');
+	$eps = $sbdb->query("SELECT s.show_name, ep.name, ep.episode, ep.season, ep.airdate FROM tv_episodes AS ep JOIN tv_shows AS s ON ep.showid=s.tvdb_id WHERE ep.status LIKE '%4' ORDER BY ep.airdate DESC LIMIT 10;");
+	$output = array();
+	while ($ep = $eps->fetchArray()) {
+		$date = new DateTime('0001-01-00');
+		$date->add(new DateInterval('P'.$ep['airdate'].'D'));
+		array_push($output, array("show" => $ep['show_name'], "episode" => "S".str_pad($ep['season'], 2, '0', STR_PAD_LEFT)."E".str_pad($ep['episode'], 2, '0', STR_PAD_LEFT), "name" => $ep['name'], "airdate" => $date->format('Y-m-d')));
+	}
+	echo json_encode($output);
+	die;
+}
+
 function cleanName($show) {
 	return preg_replace("/[^a-zA-Z0-9]/", "_", $show);
 }

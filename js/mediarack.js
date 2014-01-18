@@ -4,6 +4,7 @@ var killScroll = false;
 
 $(document).ready(function() {
 
+	getLatest();
 	getShows();
 	
 	$(".nav a").on('click',function(e) {
@@ -13,7 +14,7 @@ $(document).ready(function() {
 		$(this).parent().addClass('active');
 		$($(this).attr('href')).show();
 	});
-
+	
 	$(window).scroll(function(){
 		if  ($(window).scrollTop()+1000 >= ($(document).height() - ($(window).height()))){
 			if (killScroll == false) {
@@ -24,6 +25,44 @@ $(document).ready(function() {
 	});
 
 });
+
+function getLatest() {
+	$.getJSON('api.php', {
+		'get': 'latest'
+		}, function(data) {
+			$.each(data, function (key, ep) {
+				var ulLatestContainer = $("#latestShows");
+				var liLatestItem =  $('<li><img src="api.php?get=poster&show='+escape(ep.show)+'" /><div class="epLabel">'+ep.show+'<br />'+ep.episode+'<br />'+ep.name+'<br />'+ep.airdate+'</div></li>');
+				ulLatestContainer.append(liLatestItem);
+			});
+			$('.jcarousel').jcarousel({
+				wrap: 'both'
+			});
+			$('.jcarousel-control-prev')
+				.on('jcarouselcontrol:active', function() {
+					$(this).removeClass('inactive');
+				})
+				.on('jcarouselcontrol:inactive', function() {
+					$(this).addClass('inactive');
+				})
+				.jcarouselControl({
+					target: '-=1'
+				});
+
+			$('.jcarousel-control-next')
+				.on('jcarouselcontrol:active', function() {
+					$(this).removeClass('inactive');
+				})
+				.on('jcarouselcontrol:inactive', function() {
+					$(this).addClass('inactive');
+				})
+				.jcarouselControl({
+					target: '+=1'
+				});
+
+		}
+	);
+}
 
 function getShows() {
 	$.getJSON('api.php', {

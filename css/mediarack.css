@@ -10,6 +10,7 @@ body {
 
 .show {
 	margin-bottom: 50px;
+	min-height: 200px;
 }
 
 .showName.panel-heading {
@@ -49,7 +50,7 @@ table.episodes  tr td{
 }
 
 div.panel-body.lazy {
-	background: url('../img/no_fanart.jpg') repeat-y top center;
+	/* background: url('../img/no_fanart.jpg') repeat-y top center; */
 	background-size: 100% auto;
 }
 

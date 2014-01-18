@@ -5,7 +5,7 @@ if ($_GET['get'] == 'shows') {
 
 	$sbdb = new SQLite3($sbPath.'/sickbeard.db');
 
-	$shows = $sbdb->query("SELECT tvdb_id AS id, show_name AS name, location FROM tv_shows ORDER BY show_name ASC;");
+	$shows = $sbdb->query("SELECT tvdb_id AS id, show_name AS name, location FROM tv_shows ORDER BY show_name ASC LIMIT ".$_GET['limit']." OFFSET ".$_GET['offset'].";");
 	$output = array();
 	while ($show = $shows->fetchArray()) {
 		$rows = $sbdb->query("SELECT season, COUNT(episode_id) AS count FROM tv_episodes WHERE showid = '".$show['id']."' GROUP BY season ORDER BY season ASC");

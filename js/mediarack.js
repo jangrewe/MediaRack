@@ -1,3 +1,7 @@
+var showLimit = 5;
+var showOffset = 0;
+var killScroll = false;
+
 $(document).ready(function() {
 
 	getShows();
@@ -10,14 +14,24 @@ $(document).ready(function() {
 		$($(this).attr('href')).show();
 	});
 
+	$(window).scroll(function(){
+		if  ($(window).scrollTop()+1000 >= ($(document).height() - ($(window).height()))){
+			if (killScroll == false) {
+				killScroll = true;
+				getShows();
+			}
+		}
+	});
+
 });
 
 function getShows() {
 	$.getJSON('api.php', {
-		'get': 'shows'
+		'get': 'shows',
+		'limit': showLimit.toString(),
+		'offset': showOffset.toString()
 		}, function(data) {
 			var divShows = $("#shows");
-			divShows.empty();
 			var i = 0;
 			$.each(data, function (key, show) {
 				var divShowContainer = $('<div class="show panel panel-default" data-showid="'+show.id+'" id="show_'+show.id+'"></div>');
@@ -39,34 +53,37 @@ function getShows() {
 					});
 					ulSeasons.append(liSeason);
 				});
+				$("div.panel-body.lazy").lazyload({
+					//event: "scrollstop",
+					effect: "fadeIn",
+					threshold: 900
+				});		
+				$("img.showPoster.lazy").lazyload({
+					//event: "scrollstop",
+					effect: "fadeIn",
+					threshold: 850
+				});
+				$("img.showLogo.lazy").lazyload({
+					//event: "scrollstop",
+					effect: "fadeIn",
+					threshold: 700
+				});
 				divShowContainer.append(divShowHeader);
+				divShowContainer.append(divShowBody);
 				divShowBody.append(divShowPoster);
 				divShowBody.append(ulSeasons);
-				$("img.showLogo.lazy").lazyload({
-					event: "scrollstop",
-					effect: "fadeIn",
-					threshold: 1500
-				});
-				divShowBody.lazyload({
-					event: "scrollstop",
-					effect: "fadeIn",
-					threshold: 1800
-				});
-				$("img.showPoster.lazy").lazyload({
-					event: "scrollstop",
-					effect: "fadeIn",
-					threshold: 1600
-				});
-				divShowContainer.append(divShowBody);
 				divShowContainer.append(divShowFooter);
 				divShows.append(divShowContainer);
 				if(i < 5) {
-					divShowHeader.find("img.showLogo").attr('src', 'api.php?get=logo&show='+escape(show.folder));
-					divShowBody.css('background-image', 'url(api.php?get=fanart&show='+escape(show.folder)+')');
-					divShowPoster.find("img.showPoster").attr('src', 'api.php?get=poster&show='+escape(show.folder));
+					divShowHeader.find("img.showLogo").attr('src', 'api.php?get=logo&show='+escape(show.folder)).removeClass('lazy');
+					divShowBody.css('background-image', 'url(api.php?get=fanart&show='+escape(show.folder)+')').removeClass('lazy');
+					divShowPoster.find("img.showPoster").attr('src', 'api.php?get=poster&show='+escape(show.folder)).removeClass('lazy');
 				}
 				i++;
 			});
+			showOffset = showOffset+showLimit;
+			killScroll = false;
+			console.log(showOffset);
 		}
 	);
 }

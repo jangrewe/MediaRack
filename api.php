@@ -129,7 +129,7 @@ if ($_GET['get'] == 'episodes' && !empty($_GET['show']) && isset($_GET['season']
 	die;
 }
 
-if ($_GET['get'] == 'latest') {
+if ($_GET['get'] == 'latest' && $_GET['type'] == 'shows') {
 	$sbdb = new SQLite3($sbPath.'/sickbeard.db');
 	$eps = $sbdb->query("SELECT s.show_name, ep.name, ep.episode, ep.season, ep.airdate FROM tv_episodes AS ep JOIN tv_shows AS s ON ep.showid=s.tvdb_id WHERE ep.status LIKE '%4' ORDER BY ep.airdate DESC LIMIT 10;");
 	$output = array();

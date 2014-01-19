@@ -16,7 +16,7 @@ $(document).ready(function() {
 	});
 	
 	$(window).scroll(function(){
-		if  ($(window).scrollTop()+1000 >= ($(document).height() - ($(window).height()))){
+		if  ($(window).scrollTop()+200 >= ($(document).height() - ($(window).height()))){
 			if (killScroll == false) {
 				killScroll = true;
 				getShows();
@@ -28,6 +28,7 @@ $(document).ready(function() {
 
 function getLatest() {
 	$.getJSON('api.php', {
+		'type': 'shows',
 		'get': 'latest'
 		}, function(data) {
 			$.each(data, function (key, ep) {
@@ -92,26 +93,26 @@ function getShows() {
 					});
 					ulSeasons.append(liSeason);
 				});
-				$("div.panel-body.lazy").lazyload({
-					//event: "scrollstop",
-					effect: "fadeIn",
-					threshold: 900
-				});		
-				$("img.showPoster.lazy").lazyload({
-					//event: "scrollstop",
-					effect: "fadeIn",
-					threshold: 850
-				});
-				$("img.showLogo.lazy").lazyload({
-					//event: "scrollstop",
-					effect: "fadeIn",
-					threshold: 700
-				});
 				divShowContainer.append(divShowHeader);
 				divShowContainer.append(divShowBody);
 				divShowBody.append(divShowPoster);
 				divShowBody.append(ulSeasons);
 				divShowContainer.append(divShowFooter);
+				$("div.panel-body.lazy").lazyload({
+					//event: "scrollstop",
+					effect: "fadeIn",
+					threshold: 100
+				});		
+				$("img.showPoster.lazy").lazyload({
+					//event: "scrollstop",
+					effect: "fadeIn",
+					threshold: 100
+				});
+				$("img.showLogo.lazy").lazyload({
+					//event: "scrollstop",
+					effect: "fadeIn",
+					threshold: 100
+				});
 				divShows.append(divShowContainer);
 				if(i < 5) {
 					divShowHeader.find("img.showLogo").attr('src', 'api.php?get=logo&show='+escape(show.folder)).removeClass('lazy');
@@ -121,8 +122,9 @@ function getShows() {
 				i++;
 			});
 			showOffset = showOffset+showLimit;
-			killScroll = false;
-			console.log(showOffset);
+			if(i > 0) {
+				killScroll = false;
+			}
 		}
 	);
 }

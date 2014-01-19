@@ -24,6 +24,8 @@ body {
 	display: block;
     margin-left: auto;
     margin-right: auto;
+	min-height: 50px;
+	height: 50px;
 }
 
 #shows .thumbnail {
@@ -51,6 +53,14 @@ table.episodes  tr td{
 div.panel-body {
 	/* background: url('../img/no_fanart.jpg') repeat-y top center; */
 	background-size: 100% auto;
+}
+
+div.moviePlot {
+	padding: 0;
+}
+
+div.moviePlot div.panel-heading{
+	font-weight: bold;
 }
 
 div#shows, div#movies {

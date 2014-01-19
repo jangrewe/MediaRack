@@ -1,8 +1,6 @@
 <?php
 include_once 'config.php';
 
-/*** TV SHOWS ***/
-
 if ($_GET['get'] == 'shows' && $_GET['limit'] && isset($_GET['offset'])) {
 
 	$sbdb = new PDO('sqlite:'.$sbPath.'/sickbeard.db');
@@ -28,6 +26,34 @@ if ($_GET['get'] == 'shows' && $_GET['limit'] && isset($_GET['offset'])) {
 	die;
 	
 }
+
+if ($_GET['get'] == 'movies' && $_GET['limit'] && isset($_GET['offset'])) {
+
+	$cpdb = new PDO('sqlite:'.$cpPath.'/couchpotato.db');
+	$cpdb->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+	$movies = $cpdb->query("SELECT l.identifier AS imdb, lt.title, l.year, l.tagline, l.plot, s.label AS status FROM library AS l 
+		JOIN librarytitle AS lt ON l.id=lt.libraries_id 
+		JOIN movie AS m on l.id=m.library_id 
+		JOIN status AS s ON m.status_id=s.id
+		WHERE m.status_id = 3 AND `default` = 1 
+		ORDER BY title ASC LIMIT ".$_GET['limit']." OFFSET ".$_GET['offset'].";");
+	$output = array();
+	foreach ($movies as $movie) {
+		array_push($output, array(
+			"imdb" => $movie['imdb'],
+			"title" => $movie['title'],
+			"year" => $movie['year'],
+			"tagline" => $movie['tagline'],
+			"plot" => $movie['plot'],
+			"status" => $movie['status']
+		));
+	}
+	echo json_encode($output);
+	die;
+	
+}
+
 
 if ($_GET['get'] == 'poster' && (!empty($_GET['show']) || !empty($_GET['movie']))) {
 
@@ -165,33 +191,6 @@ if ($_GET['get'] == 'latest' && $_GET['type'] == 'shows') {
 	die;
 }
 
-
-/*** MOVIES ***/
-
-if ($_GET['get'] == 'movies' && $_GET['limit'] && isset($_GET['offset'])) {
-
-	$cpdb = new PDO('sqlite:'.$cpPath.'/couchpotato.db');
-	$cpdb->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-	$movies = $cpdb->query("SELECT l.identifier AS imdb, lt.title, l.year, s.label AS status FROM library AS l 
-		JOIN librarytitle AS lt ON l.id=lt.libraries_id 
-		JOIN movie AS m on l.id=m.library_id 
-		JOIN status AS s ON m.status_id=s.id
-		WHERE m.status_id = 3 AND `default` = 1 
-		ORDER BY title ASC LIMIT ".$_GET['limit']." OFFSET ".$_GET['offset'].";");
-	$output = array();
-	foreach ($movies as $movie) {
-		array_push($output, array(
-			"imdb" => $movie['imdb'],
-			"title" => $movie['title'],
-			"year" => $movie['year'],
-			"status" => $movie['status']
-		));
-	}
-	echo json_encode($output);
-	die;
-	
-}
 
 function cleanName($show) {
 	return preg_replace("/[^a-zA-Z0-9]/", "_", $show);

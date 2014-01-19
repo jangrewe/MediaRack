@@ -195,13 +195,21 @@ function getMovies() {
 			var i = 0;
 			$.each(data, function (key, movie) {
 				var divMovieContainer = $('<div class="movie panel panel-default" data-imdb="'+movie.imdb+'" id="movie_'+movie.imdb+'"></div>');
-				var divMovieHeader = $('<div class="movieName panel-heading"><h2 class="panel-title text-center"><img class="movieLogo lazy" style="min-height: 50px; height: 50px;" alt="'+movie.title+'" data-original="api.php?get=logo&movie='+escape(movie.title+' ('+movie.year+')')+'" src="" /></h2></div>');
+				var divMovieHeader = $('<div class="movieName panel-heading"><h2 class="panel-title text-center"><img class="movieLogo lazy" alt="'+movie.title+'" data-original="api.php?get=logo&movie='+escape(movie.title+' ('+movie.year+')')+'" src="" /></h2></div>');
 				var divMovieBody = $('<div class="panel-body lazy" data-original="api.php?get=fanart&movie='+escape(movie.title+' ('+movie.year+')')+'"></div>');
-				var divMovieFooter =$('<div class="panel-footer">IMDB Rating: </div>');
 				var divMoviePoster = $('<div class="col-md-2 text-center"><a href="#" class="thumbnail"><img id="poster_'+movie.imdb+'" class="moviePoster lazy" data-original="api.php?get=poster&movie='+escape(movie.title+' ('+movie.year+')')+'" src="img/no_poster.jpg" /></a></div>');
+				var divMoviePlot = $('<div class="moviePlot col-md-10 panel panel-default"><div class="panel-heading">'+movie.tagline+'</div><div class="panel-body">'+movie.plot+'</div></div>');
+				var divMovieFooter =$('<div class="panel-footer">IMDB Rating: </div>');
 				divMovieContainer.append(divMovieHeader);
 				divMovieContainer.append(divMovieBody);
 				divMovieBody.append(divMoviePoster);
+				divMoviePlot.fadeTo(0, 0.3);
+				divMovieContainer.hover(function() {
+					divMoviePlot.fadeTo(300, 1);
+				}, function() {
+					divMoviePlot.fadeTo(300, 0.3);
+				});
+				divMovieBody.append(divMoviePlot);
 				divMovieContainer.append(divMovieFooter);
 				$("#movies div.panel-body.lazy").lazyload({
 					//event: "scrollstop",

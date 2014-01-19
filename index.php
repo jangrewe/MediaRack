@@ -60,8 +60,10 @@
 			</div>
 		</div>
 	
-	
 		<div class="content" id="shows"></div>
+		
+		<div class="content" id="movies"></div>
+		
     </div> <!-- /container -->
 
 

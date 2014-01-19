@@ -1,25 +1,35 @@
 var showLimit = 5;
 var showOffset = 0;
-var killScroll = false;
+var loadShows = true;
+
+var movieLimit = 5;
+var movieOffset = 0;
+var loadMovies = true;
 
 $(document).ready(function() {
 
 	getLatest();
 	getShows();
+	getMovies();
 	
 	$(".nav a").on('click',function(e) {
 		e.preventDefault();
 		$('.content').hide();
 		$(".nav li").removeClass('active');
 		$(this).parent().addClass('active');
+		window.scrollTo(0, 0);
 		$($(this).attr('href')).show();
 	});
 	
 	$(window).scroll(function(){
 		if  ($(window).scrollTop()+200 >= ($(document).height() - ($(window).height()))){
-			if (killScroll == false) {
-				killScroll = true;
+			if ($("#shows").is(":visible") && loadShows == true) {
+				loadShows = false;
 				getShows();
+			}
+			if ($("#movies").is(":visible") && loadMovies == true) {
+				loadMovies = false;
+				getMovies();
 			}
 		}
 	});
@@ -98,17 +108,17 @@ function getShows() {
 				divShowBody.append(divShowPoster);
 				divShowBody.append(ulSeasons);
 				divShowContainer.append(divShowFooter);
-				$("div.panel-body.lazy").lazyload({
+				$("#shows div.panel-body.lazy").lazyload({
 					//event: "scrollstop",
 					effect: "fadeIn",
 					threshold: 100
 				});		
-				$("img.showPoster.lazy").lazyload({
+				$("#shows img.showPoster.lazy").lazyload({
 					//event: "scrollstop",
 					effect: "fadeIn",
 					threshold: 100
 				});
-				$("img.showLogo.lazy").lazyload({
+				$("#shows img.showLogo.lazy").lazyload({
 					//event: "scrollstop",
 					effect: "fadeIn",
 					threshold: 100
@@ -123,7 +133,7 @@ function getShows() {
 			});
 			showOffset = showOffset+showLimit;
 			if(i > 0) {
-				killScroll = false;
+				loadShows = true;
 			}
 		}
 	);
@@ -171,6 +181,55 @@ function getEpisodes(show, season) {
 					getEpisodes($(this).parent().parent().parent().data('showid'), $(this).data('season'));
 				});
 			});
+		}
+	);
+}
+
+function getMovies() {
+	$.getJSON('api.php', {
+		'get': 'movies',
+		'limit': movieLimit.toString(),
+		'offset': movieOffset.toString()
+		}, function(data) {
+			var divMovies = $("#movies");
+			var i = 0;
+			$.each(data, function (key, movie) {
+				var divMovieContainer = $('<div class="movie panel panel-default" data-imdb="'+movie.imdb+'" id="movie_'+movie.imdb+'"></div>');
+				var divMovieHeader = $('<div class="movieName panel-heading"><h2 class="panel-title text-center"><img class="movieLogo lazy" style="min-height: 50px; height: 50px;" alt="'+movie.title+'" data-original="api.php?get=logo&movie='+escape(movie.title+' ('+movie.year+')')+'" src="" /></h2></div>');
+				var divMovieBody = $('<div class="panel-body lazy" data-original="api.php?get=fanart&movie='+escape(movie.title+' ('+movie.year+')')+'"></div>');
+				var divMovieFooter =$('<div class="panel-footer">IMDB Rating: </div>');
+				var divMoviePoster = $('<div class="col-md-2 text-center"><a href="#" class="thumbnail"><img id="poster_'+movie.imdb+'" class="moviePoster lazy" data-original="api.php?get=poster&movie='+escape(movie.title+' ('+movie.year+')')+'" src="img/no_poster.jpg" /></a></div>');
+				divMovieContainer.append(divMovieHeader);
+				divMovieContainer.append(divMovieBody);
+				divMovieBody.append(divMoviePoster);
+				divMovieContainer.append(divMovieFooter);
+				$("#movies div.panel-body.lazy").lazyload({
+					//event: "scrollstop",
+					effect: "fadeIn",
+					threshold: 100
+				});		
+				$("#movies img.moviePoster.lazy").lazyload({
+					//event: "scrollstop",
+					effect: "fadeIn",
+					threshold: 100
+				});
+				$("#movies img.movieLogo.lazy").lazyload({
+					//event: "scrollstop",
+					effect: "fadeIn",
+					threshold: 100
+				});
+				divMovies.append(divMovieContainer);
+				if(i < 5) {
+					divMovieHeader.find("img.movieLogo").attr('src', 'api.php?get=logo&movie='+escape(movie.title+' ('+movie.year+')')).removeClass('lazy');
+					divMovieBody.css('background-image', 'url(api.php?get=fanart&movie='+escape(movie.title+' ('+movie.year+')')+')').removeClass('lazy');
+					divMoviePoster.find("img.moviePoster").attr('src', 'api.php?get=poster&movie='+escape(movie.title+' ('+movie.year+')')).removeClass('lazy');
+				}
+				i++;
+			});
+			movieOffset = movieOffset+movieLimit;
+			if(i > 0) {
+				loadMovies = true;
+			}
 		}
 	);
 }

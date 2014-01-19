@@ -13,25 +13,24 @@ body {
 	min-height: 200px;
 }
 
-.showName.panel-heading {
+.showName.panel-heading,
+.movieName.panel-heading {
 	min-height: 71px;
 	height: 71px;
 }
 
-.showLogo {	
+.showLogo, 
+.movieLogo {	
 	display: block;
     margin-left: auto;
     margin-right: auto;
 }
 
-.season {
-
-}
-
-.thumbnail {
+#shows .thumbnail {
 	min-height: 230px;
 	height: 230px;
 }
+
 .thumbnail  img.showPoster {
 	min-height: 220px;
 	height: 220px;
@@ -49,12 +48,12 @@ table.episodes  tr td{
 	font-weight: bold;
 }
 
-div.panel-body.lazy {
+div.panel-body {
 	/* background: url('../img/no_fanart.jpg') repeat-y top center; */
 	background-size: 100% auto;
 }
 
-div#shows {
+div#shows, div#movies {
 	display: none;
 }
 

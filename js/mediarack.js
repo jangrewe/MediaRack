@@ -119,6 +119,12 @@ function getShows() {
 					});
 					ulSeasons.append(liSeason);
 				});
+				ulSeasons.fadeTo(0, 0.3);
+				divShowContainer.hover(function() {
+					ulSeasons.fadeTo(300, 1);
+				}, function() {
+					ulSeasons.fadeTo(300, 0.3);
+				});
 				divShowContainer.append(divShowHeader);
 				divShowContainer.append(divShowBody);
 				divShowBody.append(divShowPoster);

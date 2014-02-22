@@ -46,7 +46,23 @@ function getLatest() {
 				var liLatestItem =  $('<li><img src="api.php?get=poster&show='+escape(ep.show)+'" /><div class="epLabel">'+ep.show+'<br />'+ep.episode+'<br />'+ep.name+'<br />'+ep.airdate+'</div></li>');
 				ulLatestContainer.append(liLatestItem);
 			});
-			$('.jcarousel').jcarousel({
+			$('.jcarousel')
+			.on('jcarousel:create jcarousel:reload', function() {
+				var element = $(this),
+					width = element.innerWidth();
+				
+				if (width > 1000) {
+					width = width / 5;
+				} else if (width > 800) {
+					width = width / 4;
+				} else if (width > 590) {
+					width = width / 3;
+				} else if (width < 590) {
+					width = width / 2;
+				}
+				element.jcarousel('items').css('width', width + 'px');
+			})
+			.jcarousel({
 				wrap: 'both'
 			});
 			$('.jcarousel-control-prev')

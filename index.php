@@ -9,6 +9,12 @@
     <link rel="shortcut icon" href="img/favicon.png">
 
     <title>MediaRack</title>
+	
+	<meta property="og:title" content="MediaRack" />
+	<meta property="og:description" content="My TV Show and Movie library" />
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content="http://<?php echo $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"]; ?>" />
+	<meta property="og:image" content="http://<?php echo $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"]; ?>img/opengraph.jpg" />
 
     <link href="css/bootstrap.min.css" rel="stylesheet">
 	<link href="css/bootstrap-slate.min.css" rel="stylesheet">
@@ -36,7 +42,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">MediaRack</a>
+          <a class="navbar-brand" href="#"><img alt="MediaRack" src="img/logo.png" /></a>
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
@@ -49,7 +55,7 @@
     </div>
 
     <div class="container">
-	
+
 		<div class="content jumbotron" id="home">
 			<div class="jcarousel-wrapper">
 				<div class="jcarousel">
@@ -59,11 +65,11 @@
 				<a href="#" class="jcarousel-control-next">&rsaquo;</a>
 			</div>
 		</div>
-	
+
 		<div class="content" id="shows"></div>
-		
+
 		<div class="content" id="movies"></div>
-		
+
     </div> <!-- /container -->
 
 
@@ -76,5 +82,22 @@
 	<script src="js/jquery.lazyload.min.js"></script>
 	<script src="js/jquery.scrollstop.js"></script>
 	<script src="js/mediarack.js"></script>
+	
+	<!-- Piwik -->
+	<script type="text/javascript">
+	  var _paq = _paq || [];
+	  _paq.push(["trackPageView"]);
+	  _paq.push(["enableLinkTracking"]);
+
+	  (function() {
+		var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.faked.org/";
+		_paq.push(["setTrackerUrl", u+"piwik.php"]);
+		_paq.push(["setSiteId", "7"]);
+		var d=document, g=d.createElement("script"), s=d.getElementsByTagName("script")[0]; g.type="text/javascript";
+		g.defer=true; g.async=true; g.src=u+"piwik.js"; s.parentNode.insertBefore(g,s);
+	  })();
+	</script>
+	<!-- End Piwik Code -->
+	
   </body>
 </html>

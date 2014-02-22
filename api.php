@@ -15,8 +15,8 @@ if ($_GET['get'] == 'shows' && $_GET['limit'] && isset($_GET['offset'])) {
 		}
 		array_push($output, array(
 			"id" => $show['id'],
-			"name" => $show['name'], 
-			"folder" => str_replace($showsPath.'/', '', $show['location']), 
+			"name" => $show['name'],
+			"folder" => str_replace($showsPath.'/', '', $show['location']),
 			"thumb" => cleanName($show['name']),
 			"seasons" => $seasons
 		));
@@ -24,19 +24,20 @@ if ($_GET['get'] == 'shows' && $_GET['limit'] && isset($_GET['offset'])) {
 	}
 	echo json_encode($output);
 	die;
-	
+
 }
+
 
 if ($_GET['get'] == 'movies' && $_GET['limit'] && isset($_GET['offset'])) {
 
 	$cpdb = new PDO('sqlite:'.$cpPath.'/couchpotato.db');
 	$cpdb->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-	$movies = $cpdb->query("SELECT l.identifier AS imdb, lt.title, l.year, l.tagline, l.plot, s.label AS status FROM library AS l 
-		JOIN librarytitle AS lt ON l.id=lt.libraries_id 
-		JOIN movie AS m on l.id=m.library_id 
+	$movies = $cpdb->query("SELECT l.identifier AS imdb, lt.title, l.year, l.tagline, l.plot, s.label AS status FROM library AS l
+		JOIN librarytitle AS lt ON l.id=lt.libraries_id
+		JOIN movie AS m on l.id=m.library_id
 		JOIN status AS s ON m.status_id=s.id
-		WHERE m.status_id = 3 AND `default` = 1 
+		WHERE m.status_id = 3 AND `default` = 1
 		ORDER BY title ASC LIMIT ".$_GET['limit']." OFFSET ".$_GET['offset'].";");
 	$output = array();
 	foreach ($movies as $movie) {
@@ -51,7 +52,7 @@ if ($_GET['get'] == 'movies' && $_GET['limit'] && isset($_GET['offset'])) {
 	}
 	echo json_encode($output);
 	die;
-	
+
 }
 
 
@@ -63,23 +64,23 @@ if ($_GET['get'] == 'poster' && (!empty($_GET['show']) || !empty($_GET['movie'])
 		$poster = get_absolute_path('poster/'.cleanName($_GET['show']).'.jpg');
 	else
 		$poster = get_absolute_path('poster/'. cleanName($_GET['movie']).'.jpg');
-	
+
 	if(!file_exists($poster)) {
-	
+
 		if($_GET['show'] && $_GET['season'])
-			$source = '/'.get_absolute_path($showsPath.'/'.$_GET['show'].'/season'.$_GET['season'].'-poster.jpg');
+			$source = '/'.get_absolute_path($showsPath.'/'.cleanName($_GET['show'], false).'/season'.$_GET['season'].'-poster.jpg');
 		elseif($_GET['show'])
-			$source = '/'.get_absolute_path($showsPath.'/'.$_GET['show'].'/poster.jpg');
+			$source = '/'.get_absolute_path($showsPath.'/'.cleanName($_GET['show'], false).'/poster.jpg');
 		else
-			$source = '/'.get_absolute_path($moviesPath.'/'.$_GET['movie'].'/'.$_GET['movie'].'-poster.jpg');
-			
+			$source = '/'.get_absolute_path($moviesPath.'/'.cleanName($_GET['movie'], false).'/'.cleanName($_GET['movie'], false).'-poster.jpg');
+
 		if(file_exists($source)) {
 			$img = new Imagick();
 			$img->setOption('jpeg:size', '800x532');
 			$img->readImage($source);
 			$img->thumbnailImage(0, 220);
 			$img->setImageCompression(Imagick::COMPRESSION_JPEG);
-			$img->setImageCompressionQuality(80); 
+			$img->setImageCompressionQuality(80);
 			$img->writeImage($poster);
 		}elseif($_GET['season'] != '') {
 			header("HTTP/1.0 404 Not Found");
@@ -88,12 +89,13 @@ if ($_GET['get'] == 'poster' && (!empty($_GET['show']) || !empty($_GET['movie'])
 			$poster = 'img/no_poster.jpg';
 		}
 	}
-	
+
 	header('Content-type: image/jpeg');
 	header('Content-length: '.filesize($poster));
 	readfile($poster);
 	die;
 }
+
 
 if ($_GET['get'] == 'fanart' && (!empty($_GET['show']) || !empty($_GET['movie']))) {
 
@@ -101,15 +103,15 @@ if ($_GET['get'] == 'fanart' && (!empty($_GET['show']) || !empty($_GET['movie'])
 		$fanart = get_absolute_path('fanart/'. cleanName($_GET['show']).'.jpg');
 	else
 		$fanart = get_absolute_path('fanart/'. cleanName($_GET['movie']).'.jpg');
-	
-	
+
+
 	if(!file_exists($fanart)) {
-	
+
 		if($_GET['show'])
-			$source = '/'.get_absolute_path($showsPath.'/'.$_GET['show'].'/fanart.jpg');
+			$source = '/'.get_absolute_path($showsPath.'/'.cleanName($_GET['show'], false).'/fanart.jpg');
 		else
-			$source = '/'.get_absolute_path($moviesPath.'/'.$_GET['movie'].'/'.$_GET['movie'].'-fanart.jpg');
-			
+			$source = '/'.get_absolute_path($moviesPath.'/'.cleanName($_GET['movie'], false).'/'.cleanName($_GET['movie'], false).'-fanart.jpg');
+
 		if(file_exists($source)) {
 			$img = new Imagick();
 			$img->setOption('jpeg:size', '1024x576');
@@ -121,18 +123,19 @@ if ($_GET['get'] == 'fanart' && (!empty($_GET['show']) || !empty($_GET['movie'])
 			$overlay->setImageOpacity(0.80);
 			$img->compositeImage($overlay, imagick::COMPOSITE_OVER, 0, 0);
 			$img->setImageCompression(Imagick::COMPRESSION_JPEG);
-			$img->setImageCompressionQuality(75); 
+			$img->setImageCompressionQuality(75);
 			$img->writeImage($fanart);
 		}else{
 			$fanart = 'img/no_fanart.jpg';
 		}
 	}
-	
+
 	header('Content-type: image/jpeg');
 	header('Content-length: '.filesize($fanart));
 	readfile($fanart);
 	die;
 }
+
 
 if ($_GET['get'] == 'logo' && (!empty($_GET['show']) || !empty($_GET['movie']))) {
 
@@ -140,14 +143,14 @@ if ($_GET['get'] == 'logo' && (!empty($_GET['show']) || !empty($_GET['movie'])))
 		$logo = get_absolute_path('logo/'.cleanName($_GET['show']).'.png');
 	else
 		$logo = get_absolute_path('logo/'.cleanName($_GET['movie']).'.png');
-	
+
 	if(!file_exists($logo)) {
-	
+
 		if($_GET['show'])
-			$source = '/'.get_absolute_path($showsPath.'/'.$_GET['show'].'/clearlogo.png');
+			$source = '/'.get_absolute_path($showsPath.'/'.cleanName($_GET['show'], false).'/clearlogo.png');
 		else
-			$source = '/'.get_absolute_path($moviesPath.'/'.$_GET['movie'].'/'.$_GET['movie'].'-clearlogo.png');
-			
+			$source = '/'.get_absolute_path($moviesPath.'/'.cleanName($_GET['movie'], false).'/'.cleanName($_GET['movie'], false).'-clearlogo.png');
+
 		if(file_exists($source)) {
 			$img = new Imagick();
 			$img->readImage($source);
@@ -158,12 +161,13 @@ if ($_GET['get'] == 'logo' && (!empty($_GET['show']) || !empty($_GET['movie'])))
 			die;
 		}
 	}
-	
+
 	header('Content-type: image/png');
 	header('Content-length: '.filesize($logo));
 	readfile($logo);
 	die;
 }
+
 
 if ($_GET['get'] == 'episodes' && !empty($_GET['show']) && isset($_GET['season'])) {
 	$sbdb = new PDO('sqlite:'.$sbPath.'/sickbeard.db');
@@ -177,6 +181,7 @@ if ($_GET['get'] == 'episodes' && !empty($_GET['show']) && isset($_GET['season']
 	echo json_encode($output);
 	die;
 }
+
 
 if ($_GET['get'] == 'latest' && $_GET['type'] == 'shows') {
 	$sbdb = new PDO('sqlite:'.$sbPath.'/sickbeard.db');
@@ -192,9 +197,13 @@ if ($_GET['get'] == 'latest' && $_GET['type'] == 'shows') {
 }
 
 
-function cleanName($show) {
-	return preg_replace("/[^a-zA-Z0-9]/", "_", $show);
+function cleanName($name, $strict = true) {
+	if($strict == true)
+		return preg_replace("/[^a-zA-Z0-9]/", "_", $name);
+	else
+		return preg_replace("/:/", "", $name);
 }
+
 
 function get_absolute_path($path) {
 	$path = str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $path);

@@ -8,7 +8,8 @@ var loadMovies = true;
 
 $(document).ready(function() {
 
-	getLatest();
+	getLatest('Shows');
+	getLatest('Movies');
 	getShows();
 	getMovies();
 	
@@ -36,17 +37,21 @@ $(document).ready(function() {
 
 });
 
-function getLatest() {
+function getLatest(type) {
 	$.getJSON('api.php', {
-		'type': 'shows',
+		'type': type.toLowerCase(),
 		'get': 'latest'
 		}, function(data) {
 			$.each(data, function (key, ep) {
-				var ulLatestContainer = $("#latestShows");
-				var liLatestItem =  $('<li><img src="api.php?get=poster&show='+escape(ep.show)+'" /><div class="epLabel">'+ep.show+'<br />'+ep.episode+'<br />'+ep.name+'<br />'+ep.airdate+'</div></li>');
+				var ulLatestContainer = $("#latest"+type);
+				if(type == 'Shows') {
+					var liLatestItem =  $('<li><img src="api.php?get=poster&show='+escape(ep.show)+'" /><div class="epLabel">'+ep.show+'<br />'+ep.episode+'<br />'+ep.name+'<br />'+ep.airdate+'</div></li>');
+				}else{
+					var liLatestItem =  $('<li><img src="api.php?get=poster&movie='+escape(ep.movie)+'" /><div class="epLabel">'+ep.movie+'</div></li>');
+				}
 				ulLatestContainer.append(liLatestItem);
 			});
-			$('.jcarousel')
+			$('.jcarousel.jc'+type)
 			.on('jcarousel:create jcarousel:reload', function() {
 				var element = $(this),
 					width = element.innerWidth();
@@ -65,7 +70,7 @@ function getLatest() {
 			.jcarousel({
 				wrap: 'both'
 			});
-			$('.jcarousel-control-prev')
+			$('.jcarousel-control-prev.jc'+type)
 				.on('jcarouselcontrol:active', function() {
 					$(this).removeClass('inactive');
 				})
@@ -76,7 +81,7 @@ function getLatest() {
 					target: '-=1'
 				});
 
-			$('.jcarousel-control-next')
+			$('.jcarousel-control-next.jc'+type)
 				.on('jcarouselcontrol:active', function() {
 					$(this).removeClass('inactive');
 				})

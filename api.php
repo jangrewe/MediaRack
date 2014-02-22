@@ -196,6 +196,23 @@ if ($_GET['get'] == 'latest' && $_GET['type'] == 'shows') {
 	die;
 }
 
+if ($_GET['get'] == 'latest' && $_GET['type'] == 'movies') {
+	$cpdb = new PDO('sqlite:'.$cpPath.'/couchpotato.db');
+	$cpdb->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	$movies = $cpdb->query("SELECT lt.title, l.year FROM library AS l
+		JOIN librarytitle AS lt ON l.id=lt.libraries_id
+		JOIN movie AS m on l.id=m.library_id
+		JOIN status AS s ON m.status_id=s.id
+		WHERE m.status_id = 3 AND `default` = 1
+		ORDER BY m.last_edit DESC LIMIT 10;");
+	$output = array();
+	foreach ($movies as $movie) {
+		array_push($output, array("movie" => $movie['title'].' ('.$movie['year'].')'));
+	}
+	echo json_encode($output);
+	die;
+}
+
 
 function cleanName($name, $strict = true) {
 	if($strict == true)

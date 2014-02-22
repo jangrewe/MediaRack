@@ -56,13 +56,34 @@
 
     <div class="container">
 
-		<div class="content jumbotron" id="home">
-			<div class="jcarousel-wrapper">
-				<div class="jcarousel">
-					<ul id="latestShows"></ul>
+		<div class="content" id="home">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title">Newest TV Show Episodes</h3>
 				</div>
-				<a href="#" class="jcarousel-control-prev">&lsaquo;</a>
-				<a href="#" class="jcarousel-control-next">&rsaquo;</a>
+				<div class="panel-body">
+					<div class="jcarousel-wrapper">
+						<div class="jcarousel jcShows">
+							<ul id="latestShows"></ul>
+						</div>
+						<a href="#" class="jcarousel-control-prev jcShows">&lsaquo;</a>
+						<a href="#" class="jcarousel-control-next jcShows">&rsaquo;</a>
+					</div>
+				</div>
+			</div>
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title">Newest Movies</h3>
+				</div>
+				<div class="panel-body">
+					<div class="jcarousel-wrapper">
+						<div class="jcarousel jcMovies">
+							<ul id="latestMovies"></ul>
+						</div>
+						<a href="#" class="jcarousel-control-prev jcMovies">&lsaquo;</a>
+						<a href="#" class="jcarousel-control-next jcMovies">&rsaquo;</a>
+					</div>
+				</div>
 			</div>
 		</div>
 

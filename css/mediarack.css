@@ -73,15 +73,19 @@ div#shows, div#movies {
 	display: none;
 }
 
-ul#latestShows li {
+ul#latestShows li,
+ul#latestMovies li {
 	text-align: center;
 }
 
 div.epLabel {
+	max-width: 200px;
 	margin-top: 5px;
 	font-size: 8pt;
 	font-weight: bold;
 	line-height: 15px;
+	text-align: center;
+
 }
 
 .jcarousel-wrapper {

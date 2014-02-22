@@ -46,9 +46,9 @@
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-			<li class="active"><a href="#home" data-toggle="collapse" data-target=".navbar-collapse">Home</a></li>
-            <li><a href="#shows" data-toggle="collapse" data-target=".navbar-collapse">TV Shows</a></li>
-            <li><a href="#movies" data-toggle="collapse" data-target=".navbar-collapse">Movies</a></li>
+			<li class="active"><a href="#home">Home</a></li>
+            <li><a href="#shows">TV Shows</a></li>
+            <li><a href="#movies">Movies</a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>

@@ -6,6 +6,8 @@ var movieLimit = 5;
 var movieOffset = 0;
 var loadMovies = true;
 
+var seasonOpacity = 0.7;
+
 $(document).ready(function() {
 
 	getLatest('Shows');
@@ -14,12 +16,10 @@ $(document).ready(function() {
 	getMovies();
 	
 	$(".nav a").on('click',function(e) {
+		var page = $(this).attr('href');
 		e.preventDefault();
-		$('.content').hide();
-		$(".nav li").removeClass('active');
-		$(this).parent().addClass('active');
-		window.scrollTo(0, 0);
-		$($(this).attr('href')).show();
+		window.location.hash = page;
+		showPage(page);
 	});
 	
 	$(window).scroll(function(){
@@ -34,8 +34,21 @@ $(document).ready(function() {
 			}
 		}
 	});
+	
+	var url = document.location.toString();
+	if (url.match('#')) {
+		showPage('#'+url.split('#')[1]);
+	}
 
 });
+
+function showPage(page) {
+	$('.content').hide();
+	$(".nav li").removeClass('active');
+	$(".nav li:has(a[href="+page+"])").addClass('active');
+	window.scrollTo(0, 0);
+	$(page).show();
+}
 
 function getLatest(type) {
 	$.getJSON('api.php', {
@@ -124,11 +137,11 @@ function getShows() {
 					});
 					ulSeasons.append(liSeason);
 				});
-				ulSeasons.fadeTo(0, 0.3);
-				divShowContainer.hover(function() {
+				ulSeasons.fadeTo(0, seasonOpacity);
+				ulSeasons.hover(function() {
 					ulSeasons.fadeTo(300, 1);
 				}, function() {
-					ulSeasons.fadeTo(300, 0.3);
+					ulSeasons.fadeTo(300, seasonOpacity);
 				});
 				divShowContainer.append(divShowHeader);
 				divShowContainer.append(divShowBody);
@@ -230,11 +243,11 @@ function getMovies() {
 				divMovieContainer.append(divMovieHeader);
 				divMovieContainer.append(divMovieBody);
 				divMovieBody.append(divMoviePoster);
-				divMoviePlot.fadeTo(0, 0.3);
-				divMovieContainer.hover(function() {
+				divMoviePlot.fadeTo(0, seasonOpacity);
+				divMovieBody.hover(function() {
 					divMoviePlot.fadeTo(300, 1);
 				}, function() {
-					divMoviePlot.fadeTo(300, 0.3);
+					divMoviePlot.fadeTo(300, seasonOpacity);
 				});
 				divMovieBody.append(divMoviePlot);
 				divMovieContainer.append(divMovieFooter);

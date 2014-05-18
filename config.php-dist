@@ -1,9 +1,16 @@
 <?php
 
-$sbPath = '/opt/sickbeard';
-$cpPath = '/opt/sickbeard';
+$cpPath = '/opt/couchpotato';
+
+$sb['host'] = 'localhost';
+$sb['post'] = '8080';
+$sb['path'] = '/';
+$sb['key'] = 'YOUR-SICKBEARD-API-KEY';
+$sb['ssl'] = false;
 
 $showsPath = '/mnt/storage/media/tv';
 $moviesPath = '/mnt/storage/media/movies';
+
+$cacheTTL = 3600;
 
 ?>

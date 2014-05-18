@@ -55,7 +55,7 @@
     </div>
 
     <div class="container">
-
+	
 		<div class="content" id="home">
 			<div class="panel panel-default">
 				<div class="panel-heading">
@@ -90,6 +90,15 @@
 		<div class="content" id="shows"></div>
 
 		<div class="content" id="movies"></div>
+		
+		<div class="panel panel-default" id="loading">
+			<div class="panel-heading text-center">
+				<img src="img/loading.gif" alt="Loading..." />
+			</div>
+			<div class="panel-body text-center">
+				<img src="img/loading_dark.gif" alt="Loading..." />
+			</div>
+		</div>
 
     </div> <!-- /container -->
 

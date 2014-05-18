@@ -88,6 +88,10 @@ div.epLabel {
 
 }
 
+#loading {
+	display: none;
+}
+
 .jcarousel-wrapper {
     margin: 20px auto;
     position: relative;

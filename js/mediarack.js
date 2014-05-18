@@ -58,7 +58,7 @@ function getLatest(type) {
 			$.each(data, function (key, ep) {
 				var ulLatestContainer = $("#latest"+type);
 				if(type == 'Shows') {
-					var liLatestItem =  $('<li><img src="api.php?get=poster&show='+escape(ep.show)+'" /><div class="epLabel">'+ep.show+'<br />'+ep.episode+'<br />'+ep.name+'<br />'+ep.airdate+'</div></li>');
+					var liLatestItem =  $('<li><img src="api.php?get=poster&show='+escape(ep.show)+'" /><div class="epLabel">'+ep.show+'<br />'+ep.episode+'<br />'+ep.airdate+'</div></li>');
 				}else{
 					var liLatestItem =  $('<li><img src="api.php?get=poster&movie='+escape(ep.movie)+'" /><div class="epLabel">'+ep.movie+'</div></li>');
 				}
@@ -110,6 +110,7 @@ function getLatest(type) {
 }
 
 function getShows() {
+	$("#loading").show();
 	$.getJSON('api.php', {
 		'get': 'shows',
 		'limit': showLimit.toString(),
@@ -175,6 +176,7 @@ function getShows() {
 			if(i > 0) {
 				loadShows = true;
 			}
+			$("#loading").hide();
 		}
 	);
 }
@@ -189,22 +191,21 @@ function getEpisodes(show, season) {
 			liSeason.find("table.episodes").remove();
 			var olEpisodes = $('<table class="table table-bordered table-condensed episodes"></table>');
 			$.each(data, function (key, episode) {
-				console.log(episode.status.substr(-1, 1));
 				var status;
-				switch(episode.status.substr(-1, 1)) {
-					case '5': // ignored
+				switch(episode.status) {
+					case 'Ignored':
 						status = "info";
 						break;
-					case '4': // downloaded
+					case 'Downloaded':
 						status = "success";
 						break;
-					case '3': // wanted
+					case 'Wanted':
 						status = "danger";
 						break;
-					case '2': // snatched
+					case 'Snatched':
 						status = "warning";
 						break;
-					case '1': // unaired
+					case 'Unaired':
 						status = "";
 						break;
 					default:

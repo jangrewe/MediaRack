@@ -182,7 +182,6 @@ function getShows() {
 }
 
 function getEpisodes(show, season) {
-	$("#loading").show();
 	$.getJSON('api.php', {
 		'get': 'episodes',
 		'show': show,
@@ -223,12 +222,12 @@ function getEpisodes(show, season) {
 					getEpisodes($(this).parent().parent().parent().data('showid'), $(this).data('season'));
 				});
 			});
-			$("#loading").hide();
 		}
 	);
 }
 
 function getMovies() {
+	$("#loading").show();
 	$.getJSON('api.php', {
 		'get': 'movies',
 		'limit': movieLimit.toString(),
@@ -281,6 +280,7 @@ function getMovies() {
 			if(i > 0) {
 				loadMovies = true;
 			}
+			$("#loading").hide();
 		}
 	);
 }

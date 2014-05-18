@@ -4,11 +4,11 @@ include_once 'config.php';
 if ($_GET['get'] == 'shows' && $_GET['limit'] && isset($_GET['offset'])) {
 
 	$output = array();
-	$data = querySB('shows');
-	uasort($data, function($a, $b) {
+	$shows = querySB('shows');
+	uasort($shows, function($a, $b) {
 		return strcmp($a['show_name'], $b['show_name']);
 	});
-	$shows = array_slice($data, $_GET['offset'], $_GET['limit'], true);
+	$shows = array_slice($shows, $_GET['offset'], $_GET['limit'], true);
 	foreach($shows as $key => $show) {
 		$dataShow = querySB('show', $key);		
 		$dataSeasons = querySB('show.seasons', $key);
@@ -20,7 +20,6 @@ if ($_GET['get'] == 'shows' && $_GET['limit'] && isset($_GET['offset'])) {
 			"id" => $key,
 			"name" => $show['show_name'],
 			"folder" => str_replace($showsPath.'/', '', $dataShow['location']),
-			"thumb" => cleanName($show['show_name']),
 			"seasons" => $seasons
 		));
 		unset($seasons);
@@ -33,24 +32,19 @@ if ($_GET['get'] == 'shows' && $_GET['limit'] && isset($_GET['offset'])) {
 
 if ($_GET['get'] == 'movies' && $_GET['limit'] && isset($_GET['offset'])) {
 
-	$cpdb = new PDO('sqlite:'.$cpPath.'/couchpotato.db');
-	$cpdb->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-	$movies = $cpdb->query("SELECT l.identifier AS imdb, lt.title, l.year, l.tagline, l.plot, s.label AS status FROM library AS l
-		JOIN librarytitle AS lt ON l.id=lt.libraries_id
-		JOIN movie AS m on l.id=m.library_id
-		JOIN status AS s ON m.status_id=s.id
-		WHERE m.status_id = 3 AND `default` = 1
-		ORDER BY title ASC LIMIT ".$_GET['limit']." OFFSET ".$_GET['offset'].";");
+	$movies = queryCP('movie.list', 'status=done');
+	$movies = array_slice($movies, $_GET['offset'], $_GET['limit'], true);
 	$output = array();
 	foreach ($movies as $movie) {
 		array_push($output, array(
-			"imdb" => $movie['imdb'],
+			"imdb" => $movie['info']['imdb'],
 			"title" => $movie['title'],
-			"year" => $movie['year'],
-			"tagline" => $movie['tagline'],
-			"plot" => $movie['plot'],
-			"status" => $movie['status']
+			"year" => $movie['info']['year'],
+			"tagline" => $movie['info']['tagline'],	
+			"plot" => $movie['info']['plot'],
+			"rating" => $movie['info']['rating']['imdb'][0].' ('.$movie['info']['rating']['imdb'][1].')',
+			"status" => $movie['status'],
+			"folder" => current(explode('/', current(str_replace($moviesPath.'/', '', $movie['releases'][0]['files']['movie']))))
 		));
 	}
 	echo json_encode($output);
@@ -187,7 +181,6 @@ if ($_GET['get'] == 'episodes' && !empty($_GET['show']) && isset($_GET['season']
 
 if ($_GET['get'] == 'latest' && $_GET['type'] == 'shows') {
 	
-	//$eps = $sbdb->query("SELECT s.show_name, ep.name, ep.episode, ep.season, ep.airdate FROM tv_episodes AS ep JOIN tv_shows AS s ON ep.showid=s.tvdb_id WHERE ep.status LIKE '%4' ORDER BY ep.airdate DESC LIMIT 10;");
 	$eps = querySB('history');
 	$output = array();
 	foreach ($eps as $ep) {
@@ -198,23 +191,23 @@ if ($_GET['get'] == 'latest' && $_GET['type'] == 'shows') {
 	$output = array_slice($output, 0, 10);
 	echo json_encode($output);
 	die;
+	
 }
 
 if ($_GET['get'] == 'latest' && $_GET['type'] == 'movies') {
-	$cpdb = new PDO('sqlite:'.$cpPath.'/couchpotato.db');
-	$cpdb->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-	$movies = $cpdb->query("SELECT lt.title, l.year FROM library AS l
-		JOIN librarytitle AS lt ON l.id=lt.libraries_id
-		JOIN movie AS m on l.id=m.library_id
-		JOIN status AS s ON m.status_id=s.id
-		WHERE m.status_id = 3 AND `default` = 1
-		ORDER BY m.last_edit DESC LIMIT 10;");
+
+	$movies = queryCP('movie.list', 'status=done');
+	uasort($movies, function($a, $b) {
+		return $b['releases'][0]['last_edit'] - $a['releases'][0]['last_edit'];
+	});
 	$output = array();
 	foreach ($movies as $movie) {
-		array_push($output, array("movie" => $movie['title'].' ('.$movie['year'].')'));
+		array_push($output, array("movie" => $movie['title'].' ('.$movie['info']['year'].')'));
 	}
+	$output = array_slice($output, 0, 10);
 	echo json_encode($output);
 	die;
+	
 }
 
 
@@ -242,6 +235,7 @@ function get_absolute_path($path) {
 }
 
 function querySB($cmd, $id = '', $season = '') {
+	
 	global $sb, $cacheTTL;
 	if($id == '') {
 		$cache = './cache/'.$cmd.'.json';
@@ -254,6 +248,23 @@ function querySB($cmd, $id = '', $season = '') {
 	$json = file_get_contents($cache);
 	$data = current(json_decode($json, true));
 	return $data;
+	
+}
+
+function queryCP($cmd, $params = '') {
+	
+	global $cp, $cacheTTL;
+	if($params != '') {
+		$params = '?'.$params;
+	}
+	$cache = './cache/'.$cmd.'.json';
+	if (!file_exists($cache) || filemtime($cache) < time()-$cacheTTL) {
+		file_put_contents($cache, file_get_contents('http://'.$cp['host'].':'.$cp['port'].$cp['path'].'/api/'.$cp['key'].'/'.$cmd.'/'.$params));
+	}
+	$json = file_get_contents($cache);
+	$data = current(json_decode($json, true));
+	return $data;
+	
 }
 
 ?>

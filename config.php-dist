@@ -1,12 +1,16 @@
 <?php
 
-$cpPath = '/opt/couchpotato';
-
 $sb['host'] = 'localhost';
-$sb['post'] = '8080';
+$sb['post'] = '8081';
 $sb['path'] = '/';
 $sb['key'] = 'YOUR-SICKBEARD-API-KEY';
 $sb['ssl'] = false;
+
+$cp['host'] = 'localhost';
+$cp['post'] = '8082';
+$cp['path'] = '/';
+$cp['key'] = 'YOUR-COUCHPOTATO-KEY';
+$cp['ssl'] = false;
 
 $showsPath = '/mnt/storage/media/tv';
 $moviesPath = '/mnt/storage/media/movies';

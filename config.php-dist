@@ -12,9 +12,13 @@ $cp['path'] = '/';
 $cp['key'] = 'YOUR-COUCHPOTATO-KEY';
 $cp['ssl'] = false;
 
-$showsPath = '/mnt/storage/media/tv';
-$moviesPath = '/mnt/storage/media/movies';
+$showsPath = '/storage/media/tv';
+$moviesPath = '/storage/media/movies';
 
 $cacheTTL = 3600;
+
+$cdn['enabled'] = false;
+$cdn['host'] = 'cdn#.example.com';
+$cdn['count'] = 2;
 
 ?>

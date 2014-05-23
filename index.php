@@ -1,3 +1,6 @@
+<?php
+include_once 'config.php';
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -102,10 +105,11 @@
 
     </div> <!-- /container -->
 
-
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
+	<script>
+		var cdnEnabled = '<?php echo $cdn['enabled']; ?>';
+		var cdnHostPattern = '<?php echo $cdn['host']; ?>';
+		var cdnHostCount = <?php echo $cdn['count']; ?>;
+	</script>
     <script src="js/jquery-1.10.2.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
 	<script src="js/jquery.jcarousel.min.js"></script>

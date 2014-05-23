@@ -62,6 +62,7 @@ if ($_GET['get'] == 'poster' && (!empty($_GET['show']) || !empty($_GET['movie'])
 	else
 		$poster = get_absolute_path('poster/'. cleanName($_GET['movie']).'.jpg');
 
+
 	if(!file_exists($poster)) {
 
 		if($_GET['show'] && $_GET['season'])
@@ -83,7 +84,8 @@ if ($_GET['get'] == 'poster' && (!empty($_GET['show']) || !empty($_GET['movie'])
 			header("HTTP/1.0 404 Not Found");
 			die;
 		}else{
-			$poster = 'img/no_poster.jpg';
+			//$poster = 'img/no_poster.jpg';
+			header("Location: ../../img/no_poster.jpg");
 		}
 	}
 
@@ -123,7 +125,8 @@ if ($_GET['get'] == 'fanart' && (!empty($_GET['show']) || !empty($_GET['movie'])
 			$img->setImageCompressionQuality(75);
 			$img->writeImage($fanart);
 		}else{
-			$fanart = 'img/no_fanart.jpg';
+			//$fanart = 'img/no_fanart.jpg';
+			header("Location: ../../img/no_fanart.jpg");
 		}
 	}
 

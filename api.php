@@ -55,12 +55,18 @@ if ($_GET['get'] == 'movies' && $_GET['limit'] && isset($_GET['offset'])) {
 
 if ($_GET['get'] == 'poster' && (!empty($_GET['show']) || !empty($_GET['movie']))) {
 
+	if(isset($_GET['show'])) {
+		$type = 'show';
+	}else{
+		$type = 'movie';
+	}
+
 	if($_GET['show'] && $_GET['season'])
-		$poster = get_absolute_path('poster/'.cleanName($_GET['show']).'-S'.$_GET['season'].'.jpg');
+		$poster = get_absolute_path('poster/'.$type.'/'.cleanName($_GET['show']).'-S'.$_GET['season'].'.jpg');
 	elseif($_GET['show'])
-		$poster = get_absolute_path('poster/'.cleanName($_GET['show']).'.jpg');
+		$poster = get_absolute_path('poster/'.$type.'/'.cleanName($_GET['show']).'.jpg');
 	else
-		$poster = get_absolute_path('poster/'. cleanName($_GET['movie']).'.jpg');
+		$poster = get_absolute_path('poster/'.$type.'/'.cleanName($_GET['movie']).'.jpg');
 
 
 	if(!file_exists($poster)) {
@@ -98,11 +104,13 @@ if ($_GET['get'] == 'poster' && (!empty($_GET['show']) || !empty($_GET['movie'])
 
 if ($_GET['get'] == 'fanart' && (!empty($_GET['show']) || !empty($_GET['movie']))) {
 
-	if($_GET['show'])
-		$fanart = get_absolute_path('fanart/'. cleanName($_GET['show']).'.jpg');
-	else
-		$fanart = get_absolute_path('fanart/'. cleanName($_GET['movie']).'.jpg');
-
+	if(isset($_GET['show'])) {
+		$type = 'show';
+	}else{
+		$type = 'movie';
+	}
+	
+	$fanart = get_absolute_path('fanart/'.$type.'/'. cleanName($_GET[$type]).'.jpg');
 
 	if(!file_exists($fanart)) {
 
@@ -139,10 +147,13 @@ if ($_GET['get'] == 'fanart' && (!empty($_GET['show']) || !empty($_GET['movie'])
 
 if ($_GET['get'] == 'logo' && (!empty($_GET['show']) || !empty($_GET['movie']))) {
 
-	if($_GET['show'])
-		$logo = get_absolute_path('logo/'.cleanName($_GET['show']).'.png');
-	else
-		$logo = get_absolute_path('logo/'.cleanName($_GET['movie']).'.png');
+	if(isset($_GET['show'])) {
+		$type = 'show';
+	}else{
+		$type = 'movie';
+	}
+	
+	$logo = get_absolute_path('logo/'.cleanName($_GET[$type]).'.png');
 
 	if(!file_exists($logo)) {
 

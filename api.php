@@ -32,7 +32,7 @@ if ($_GET['get'] == 'shows' && $_GET['limit'] && isset($_GET['offset'])) {
 
 if ($_GET['get'] == 'movies' && $_GET['limit'] && isset($_GET['offset'])) {
 
-	$movies = queryCP('movie.list', 'status=done');
+	$movies = queryCP('media.list', 'type=movie&status=done&release_status=done&status_or=1');
 	$movies = array_slice($movies, $_GET['offset'], $_GET['limit'], true);
 	$output = array();
 	foreach ($movies as $movie) {
@@ -199,7 +199,7 @@ if ($_GET['get'] == 'latest' && $_GET['type'] == 'shows') {
 
 if ($_GET['get'] == 'latest' && $_GET['type'] == 'movies') {
 
-	$movies = queryCP('movie.list', 'status=done');
+	$movies = queryCP('media.list', 'type=movie&status=done&release_status=done&status_or=1');
 	uasort($movies, function($a, $b) {
 		return $b['releases'][0]['last_edit'] - $a['releases'][0]['last_edit'];
 	});

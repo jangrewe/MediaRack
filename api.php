@@ -127,7 +127,7 @@ if ($_GET['get'] == 'fanart' && (!empty($_GET['show']) || !empty($_GET['movie'])
 			$overlay = new Imagick();
 			$overlay->newImage(1024, 576, new ImagickPixel('black'));
 			$overlay->setOption('jpeg:size', '1024x576');
-			$overlay->setImageOpacity(0.80);
+			$overlay->setImageOpacity(0.50);
 			$img->compositeImage($overlay, imagick::COMPOSITE_OVER, 0, 0);
 			$img->setImageCompression(Imagick::COMPRESSION_JPEG);
 			$img->setImageCompressionQuality(50);

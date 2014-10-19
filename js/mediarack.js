@@ -7,7 +7,7 @@ var movieLimit = 5;
 var movieOffset = 0;
 var loadMovies = true;
 
-var seasonOpacity = 0.7;
+var seasonOpacity = 0.5;
 
 $(document).ready(function() {
 
@@ -124,7 +124,17 @@ function getShows() {
 				var divShowHeader = $('<div class="showName panel-heading"><h2 class="panel-title text-center"><img class="showLogo lazy" style="min-height: 50px; height: 50px;" alt="'+show.name+'" data-original="'+cdn('show/'+escape(show.folder)+'/logo.png')+'" /></h2></div>');
 				var divShowBody = $('<div class="panel-body lazy" data-original="'+cdn('show/'+escape(show.folder)+'/fanart.jpg')+'"></div>');
 				divShowBody.css('background-image', 'url('+cdn('img/no_fanart.jpg'));
-				var divShowFooter =$('<div class="panel-footer">Seasons: , Episodes: </div>');
+				
+				if(show.seasons[0].season == '0') {
+					var countSeasons = show.seasons.length-1;
+				} else {
+					var countSeasons = show.seasons.length;
+				}
+				var countEpisodes = 0;
+				$.each(show.seasons, function(i, season) {
+					countEpisodes = countEpisodes+season.count;
+				});
+				var divShowFooter =$('<div class="panel-footer"><strong>Seasons:</strong> '+countSeasons+', <strong>Episodes:</strong> '+countEpisodes+' </div>');
 				var divShowPoster = $('<div class="col-md-2 text-center"><a href="#" class="thumbnail"><img id="poster_'+show.id+'" class="showPoster lazy" data-original="'+cdn('show/'+escape(show.folder)+'/poster.jpg')+'" /></a></div>');
 				var ulSeasons = $('<ul class="seasons col-md-10 list-group"></ul>');
 				$.each(show.seasons, function(key, season) {
@@ -146,7 +156,7 @@ function getShows() {
 					ulSeasons.append(liSeason);
 				});
 				ulSeasons.fadeTo(0, seasonOpacity);
-				ulSeasons.hover(function() {
+				divShowBody.hover(function() {
 					ulSeasons.fadeTo(300, 1);
 				}, function() {
 					ulSeasons.fadeTo(300, seasonOpacity);

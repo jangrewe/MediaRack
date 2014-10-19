@@ -10,9 +10,7 @@ include_once 'config.php';
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="shortcut icon" href="img/favicon.png">
-
     <title>MediaRack</title>
-	
 	<meta property="og:title" content="MediaRack" />
 	<meta property="og:description" content="My TV Show and Movie library" />
 	<meta property="og:type" content="website" />

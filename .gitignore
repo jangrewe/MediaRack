@@ -1,5 +1,8 @@
 /config.php
-/logo/*.png
-/fanart/*.jpg
-/poster/*.jpg
 /cache/*.json
+/logo/show/*.png
+/logo/movie/*.png
+/fanart/show/*.jpg
+/fanart/movie/*.jpg
+/poster/show/*.jpg
+/poster/movie/*.jpg

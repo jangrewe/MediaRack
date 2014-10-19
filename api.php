@@ -44,7 +44,7 @@ if ($_GET['get'] == 'movies' && $_GET['limit'] && isset($_GET['offset'])) {
 			"plot" => $movie['info']['plot'],
 			"rating" => $movie['info']['rating']['imdb'][0].' ('.$movie['info']['rating']['imdb'][1].')',
 			"status" => $movie['status'],
-			"folder" => current(explode('/', current(str_replace($moviesPath.'/', '', $movie['releases'][0]['files']['movie']))))
+			"folder" => current(explode('/', current(str_replace($moviesPath.'/', '', $movie['releases'][release_with_file($movie['releases'])]['files']['movie']))))
 		));
 	}
 	echo json_encode($output);
@@ -84,7 +84,7 @@ if ($_GET['get'] == 'poster' && (!empty($_GET['show']) || !empty($_GET['movie'])
 			$img->readImage($source);
 			$img->thumbnailImage(0, 220);
 			$img->setImageCompression(Imagick::COMPRESSION_JPEG);
-			$img->setImageCompressionQuality(80);
+			$img->setImageCompressionQuality(70);
 			$img->writeImage($poster);
 		}elseif($_GET['season'] != '') {
 			header("HTTP/1.0 404 Not Found");
@@ -130,7 +130,7 @@ if ($_GET['get'] == 'fanart' && (!empty($_GET['show']) || !empty($_GET['movie'])
 			$overlay->setImageOpacity(0.80);
 			$img->compositeImage($overlay, imagick::COMPOSITE_OVER, 0, 0);
 			$img->setImageCompression(Imagick::COMPRESSION_JPEG);
-			$img->setImageCompressionQuality(75);
+			$img->setImageCompressionQuality(50);
 			$img->writeImage($fanart);
 		}else{
 			//$fanart = 'img/no_fanart.jpg';
@@ -153,7 +153,7 @@ if ($_GET['get'] == 'logo' && (!empty($_GET['show']) || !empty($_GET['movie'])))
 		$type = 'movie';
 	}
 	
-	$logo = get_absolute_path('logo/'.cleanName($_GET[$type]).'.png');
+	$logo = get_absolute_path('logo/'.$type.'/'.cleanName($_GET[$type]).'.png');
 
 	if(!file_exists($logo)) {
 
@@ -279,6 +279,15 @@ function queryCP($cmd, $params = '') {
 	$data = current(json_decode($json, true));
 	return $data;
 	
+}
+
+function release_with_file($releases) {
+    foreach($releases as $release => $value) {
+        if($releases[$release]['status'] == 'done' && count($releases[$release]['files']['movie']) > 0) {
+            return $release;
+        }
+    }
+    return false;
 }
 
 ?>
